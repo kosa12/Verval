@@ -1,4 +1,4 @@
-name: Build verval solution
+name: Build and Test verval solution
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,3 +28,22 @@ jobs:
       # Solution buildelése
       - name: Build solution
         run: dotnet build verval.sln --configuration Release --no-restore
+      
+      # Tesztek futtatása és coverage gyűjtés
+      - name: Run tests with coverage
+        run: dotnet test test/DatesAndStuff.Tests/DatesAndStuff.Tests.csproj --configuration Release --no-build --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+      
+      # ReportGenerator telepítése
+      - name: Install ReportGenerator
+        run: dotnet tool install -g dotnet-reportgenerator-globaltool
+      
+      # HTML riport generálása
+      - name: Generate coverage report
+        run: reportgenerator -reports:"test/DatesAndStuff.Tests/TestResults/*/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
+      
+      # Artifact feltöltése
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coveragereport/
