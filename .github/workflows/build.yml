@@ -1,0 +1,30 @@
+name: Build verval solution
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Kód letöltése
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      # .NET SDK telepítése
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      
+      # Függőségek visszaállítása
+      - name: Restore dependencies
+        run: dotnet restore verval.sln
+      
+      # Solution buildelése
+      - name: Build solution
+        run: dotnet build verval.sln --configuration Release --no-restore
