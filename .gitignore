@@ -401,9 +401,6 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp
 
-
-*.sln
-*.csproj
 *.csproj.user
 *.xml
 .idea/
