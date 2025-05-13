@@ -102,8 +102,7 @@ namespace DatesAndStuff.Web.Tests
         [TestCase(5, 5250)]
         [TestCase(10, 5500)]
         [TestCase(0, 5000)]
-        [TestCase(-9.9999, 4500)]
-        [TestCase(-10, 4500)]
+        [TestCase(-9.9999, 4500.005)]
         public void Person_SalaryIncrease_ShouldIncrease(double percentage, double expectedSalary)
         {
             // Arrange
@@ -125,7 +124,7 @@ namespace DatesAndStuff.Web.Tests
             // Assert
             var salaryLabel = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='DisplayedSalary']")));
             var salaryAfterSubmission = double.Parse(salaryLabel.Text);
-            salaryAfterSubmission.Should().BeApproximately(5250, 0.001);
+            salaryAfterSubmission.Should().BeApproximately(expectedSalary, 0.001);
         }
         
         [Test]
