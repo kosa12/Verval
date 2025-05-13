@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
 
 
 [assembly: InternalsVisibleTo("DatesAndStuff.Tests")]
@@ -46,7 +40,6 @@ namespace DatesAndStuff
             this.CanEatLactose = foodPreferenceParams.CanEatLactose;
             this.CanEatEgg = foodPreferenceParams.CanEatEgg;
             this.CanEatChocolate = foodPreferenceParams.CanEatChocolate;
-
         }
 
         public void GotMarried(string newName)
@@ -82,18 +75,9 @@ namespace DatesAndStuff
         public bool PerformSubsriptionPayment()
         {
             PreferredPayment.StartPayment();
-            double balance = PreferredPayment.GetBalance();
-
-            if (balance > SubscriptionFee)
-            {   
-                PreferredPayment.SpecifyAmount(SubscriptionFee);
-                PreferredPayment.Confirm();
-                return PreferredPayment.SuccessFul();
-            } 
-
-            PreferredPayment.Cancel();
-            return false;
-
+            PreferredPayment.SpecifyAmount(SubscriptionFee);
+            PreferredPayment.ConfirmPayment();
+            return true;
         }
     }
 }
