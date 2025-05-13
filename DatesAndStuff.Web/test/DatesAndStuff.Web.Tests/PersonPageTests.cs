@@ -7,6 +7,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System.Globalization;
 
 namespace DatesAndStuff.Web.Tests
 {
@@ -101,6 +102,8 @@ namespace DatesAndStuff.Web.Tests
         [TestCase(5, 5250)]
         [TestCase(10, 5500)]
         [TestCase(0, 5000)]
+        [TestCase(-9.9999, 4500)]
+        [TestCase(-10, 4500)]
         public void Person_SalaryIncrease_ShouldIncrease(double percentage, double expectedSalary)
         {
             // Arrange
@@ -112,7 +115,7 @@ namespace DatesAndStuff.Web.Tests
 
             var input = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='SalaryIncreasePercentageInput']")));
             input.Clear();
-            input.SendKeys("5");
+            input.SendKeys(percentage.ToString(CultureInfo.InvariantCulture));
 
             // Act
             var submitButton = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='SalaryIncreaseSubmitButton']")));
@@ -126,8 +129,8 @@ namespace DatesAndStuff.Web.Tests
         }
         
         [Test]
-        [TestCase(-15, TestName = "SalaryIncrease_Negative15Percent_ShouldShowErrorMessages")]
-        public void Person_SalaryIncrease_LessThanNegative10_ShouldShowErrorMessages(int percentage)
+        [TestCase(-10.00001, 1000, TestName = "SalaryIncrease_Negative15Percent_ShouldShowErrorMessages")]
+        public void Person_SalaryIncrease_LessThanNegative10_ShouldShowErrorMessages(double percentage, double expectedSalary)
         {
             // Arrange
             driver.Navigate().GoToUrl(BaseURL);
@@ -138,7 +141,7 @@ namespace DatesAndStuff.Web.Tests
 
             var input = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='SalaryIncreasePercentageInput']")));
             input.Clear();
-            input.SendKeys(percentage.ToString());
+            input.SendKeys(percentage.ToString(CultureInfo.InvariantCulture));
 
             // Act
             var submitButton = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@data-test='SalaryIncreaseSubmitButton']")));
